@@ -1,65 +1,42 @@
-<?php 
-    include("components/header.php");
+<?php
+    include "config.php";
+    include "Models/User/User.php";
 
-    $perPage = 4;
-    $currentPage = isset($_GET['page']) ? $_GET['page'] : 1 ;
+    $user = new User();
+    $users = $user->get();
+?>
 
-    $count_query = $myDatabase->prepare("SELECT COUNT(*) as cnt FROM posts");
-    $count_query->execute();
-    $total_cnt = $count_query->fetchColumn(); //18
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    
+    <table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Username</th>
+    </tr>
+    <?php
 
-    $paging = ceil($total_cnt / $perPage);
-
-    $offset = $perPage * ($currentPage - 1);
-
-    $query = "SELECT p.*, c.name as category_name, u.username, u.id as user_id
-                FROM posts p
-          INNER JOIN categories c ON p.category_id = c.id
-          INNER JOIN users u ON p.user_id = u.id 
-            ORDER BY p.id DESC
-               LIMIT ".$perPage." OFFSET ".$offset;
-
-    $posts = $myDatabase->prepare($query);
-    $posts->execute();
-
-?>  
-
-<section id="posts">
-    <div class="container">
-        <div class="post-list">
-            <?php while($row = $posts->fetch()) {?>
-                <div class="post-item">
-                    <div class="content">
-                        <h2>
-                            <?= $row['title'] ?> 
-                            <?php if(isset($_SESSION) && isset($_SESSION['user_id']) && $_SESSION['user_id'] == $row['user_id']): ?>
-                                <a href="">Edit</a>
-                            <?php endif; ?>
-                        </h2>
-                        <span class="post-cat"><?= $row['category_name'] ?></span>
-                        <span class="post-cat"><?= 'Author: '.$row['username'] ?></span>
-                        <p><?= $row['short_text'] ?></p>
-                        <a class="link" href="article.php?id=<?= $row['id'] ?>">Read More</a>
-                    </div>
-                </div>
-            <?php } ?>
-
-            <?php
-                $start = max(1, $currentPage-2);
-                $end = min($paging, $currentPage+2);         
+        foreach ($users as $key => $value) {
             ?>
+                <tr>
+                    <td><?= $value['id'] ?></td>
+                    <td><?= $value['name'] ?></td>
+                    <td><?= $value['email'] ?></td>
+                    <td><?= $value['username'] ?></td>
+                </tr>
+            <?php
+        }
+    
+    ?>
+    </table>
 
-            <div class="page-container">
-                <div class="pagination">
-                    <?php for ($i=$start; $i <= $end; $i++) { 
-                        ?>
-                            <a href="<?= '?page='.$i ?>" class="<?= $currentPage == $i ? 'active' : ''?>"><?= $i ?></a>
-                        <?php
-                    }?>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<?php include("components/footer.php") ?>
+</body>
+</html>
