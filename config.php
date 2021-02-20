@@ -3,4 +3,3 @@
     ini_set('display_errors', TRUE);
 
     include "Models/Database.php";
-    include "NewModels/Database/Database.php";

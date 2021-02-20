@@ -9,7 +9,7 @@ class Database
 {
 
     protected $host = "localhost";
-    protected $dbName = "test_1";
+    protected $dbName = "school-oop";
     protected $username = "admin";
     protected $password = "admin123";
     public $pdo;
@@ -42,6 +42,21 @@ class Database
         while ( $row = $sql->fetch() ) {
             $data[] = $row;
         }
+
+        return $data;
+
+    }
+
+    public function getById( $id )
+    {
+        $data = [];
+
+        $query = "SELECT * FROM " . $this->tableName . " WHERE id = ".$id;
+
+        $sql = $this->pdo->prepare( $query );
+        $sql->execute();
+
+        $data = $sql->fetch();
 
         return $data;
 

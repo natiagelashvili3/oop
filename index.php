@@ -1,9 +1,9 @@
 <?php
     include "config.php";
-    include "Models/User/User.php";
+    include "Models/Post/Post.php";
 
-    $user = new User();
-    $users = $user->get();
+    $post = new Post();
+    $posts = $post->getPostsWithCategories();
 ?>
 
 <html lang="en">
@@ -14,29 +14,47 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    
-    <table>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Username</th>
-    </tr>
-    <?php
 
-        foreach ($users as $key => $value) {
-            ?>
+    <header>
+        <nav>
+            <a href="index.php">Posts</a>
+            <a href="#">News</a>
+            <a href="#">About</a>
+        </nav>
+    </header> 
+    
+    <div class="container">
+        <a class="btn" href="add-post.php">Add Post</a>
+        <a class="btn" href="add-category.php">Add Category</a>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Text</th>
+                <th>Category</th>
+                <th>Actions</th>
+            </tr>
+            <?php
+
+            foreach ($posts as $key => $value) {
+                ?>
                 <tr>
                     <td><?= $value['id'] ?></td>
-                    <td><?= $value['name'] ?></td>
-                    <td><?= $value['email'] ?></td>
-                    <td><?= $value['username'] ?></td>
+                    <td><?= $value['title'] ?></td>
+                    <td><?= $value['text'] ?></td>
+                    <td><?= $value['cat_name'] ?></td>
+                    <td>
+                        <a href="edit-post.php?id=<?= $value['id'] ?>">
+                            Edit
+                        </a>
+                    </td>
                 </tr>
-            <?php
-        }
-    
-    ?>
-    </table>
+                <?php
+            }
+
+            ?>
+        </table>
+    </div>
 
 </body>
 </html>
